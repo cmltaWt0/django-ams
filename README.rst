@@ -19,16 +19,16 @@ Quick start
 
 3. Create or change conf.ini file in root of your django project to add next::
 
-   [smtp_ip]
-   smtp_ip =
+    [smtp_ip]
+    smtp_ip =
 
-   [smtp_port]
-   smtp_port =
+    [smtp_port]
+    smtp_port =
 
-   [send_from]
-   from = no-reply@mail.com
+    [send_from]
+    from = 
 
-   [send_to]
-   to1 = user@mail.com
-   to2 =  
+    [send_to]
+    to1 = 
+    to2 =  
 
