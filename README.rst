@@ -17,7 +17,7 @@ Quick start
 
     url(r'^ams/', include('ams.urls')),
 
- 3. Create or change conf.ini file in root of your django project to add next::
+3. Create or change conf.ini file in root of your django project to add next::
 
    [smtp_ip]
    smtp_ip =
