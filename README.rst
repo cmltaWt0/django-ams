@@ -1,7 +1,7 @@
 =======
 AMS
 =======
-Ams is a simple Django app to accident's management.
+Ams is a simple Django app to accidents/alarms management.
 
 Quick start
 -----------
