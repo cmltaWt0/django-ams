@@ -51,6 +51,7 @@ class Phone(models.Model):
         verbose_name_plural = "Телефоны"
 
 
+# TODO Move common parts of Engineer and Publisher to ABS or through proxy.
 class Engineer(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=40, blank=True)
@@ -88,7 +89,7 @@ class State(models.Model):
     class Meta:
         verbose_name_plural = "Состояния"
 
-
+# TODO Move common parts of Step and Event to ABS or through proxy.
 class Step(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField()
