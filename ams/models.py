@@ -114,42 +114,44 @@ class Event(AbstractEvent):
         verbose_name_plural = "Аварии"
 
 
-# @receiver(post_save, sender=Event, dispatch_uid="EventSaveDispatch")
-# def send_mail(sender, **kwargs):
-#         """
-#         send_mail(smtp_ip: dict, smtp_port: dict, send_from: dict, send_to: dict,
-#                   user: str, login_name: str, reply: str) -> None
-#         """
-#         try:
-#             msg = MIMEMultipart()
-#             msg['From'] = SEND_FROM['send_from'][0]
-#             msg['Date'] = formatdate(localtime=True)
-#
-#             if 'instance' in kwargs:
-#                 instance = kwargs['instance']
-#                 text = instance.title
-#                 msg['Subject'] = u'Авария изменена.'
-#                 post_id = str(instance.id)
-#             elif 'comment' in kwargs:
-#                 comment = kwargs['comment']
-#                 text = comment.content_object.title + '\n' + comment.comment
-#                 msg['Subject'] = u'Добавлен комментарий.'
-#                 post_id = str(comment.content_object.id)
-#             else:
-#                 text = 'Caramba...'
-#                 msg['Subject'] = 'Something goes wrong'
-#
-#             msg['To'] = COMMASPACE.join(SEND_TO['send_to'])
-#             msg.attach(MIMEText(text.encode('UTF-8')+'\n\n'+
-#                        'http://sokolskiy.masq.lc'+reverse('ams:detail', args=(post_id,))))
-#
-#             smtp = smtplib.SMTP(SMTP_IP['smtp_ip'][0], int(SMTP_PORT['smtp_port'][0]))
-#             smtp.sendmail(SEND_FROM['send_from'][0], SEND_TO['send_to'], msg.as_string())
-#         # In python 3.3 it now has ConnectionRefusedError and socket.error is deprecated.
-#         except socket_error as serr:
-#             if serr.errno != errno.ECONNREFUSED:
-#                 raise serr
-#             else:
-#                 pass
-#
-# comment_was_posted.connect(send_mail, dispatch_uid='CommentPostDispatch')
+@receiver(post_save, sender=Event, dispatch_uid="EventSaveDispatch")
+def send_mail(sender, **kwargs):
+        """
+        send_mail(smtp_ip: dict, smtp_port: dict, send_from: dict, send_to: dict,
+                  user: str, login_name: str, reply: str) -> None
+        """
+        try:
+            msg = MIMEMultipart()
+            msg['From'] = SEND_FROM['send_from'][0]
+            msg['Date'] = formatdate(localtime=True)
+
+            if 'instance' in kwargs:
+                instance = kwargs['instance']
+                text = instance.title
+                msg['Subject'] = u'Авария изменена.'
+                post_id = str(instance.id)
+            elif 'comment' in kwargs:
+                comment = kwargs['comment']
+                text = comment.content_object.title + '\n' + comment.comment
+                msg['Subject'] = u'Добавлен комментарий.'
+                post_id = str(comment.content_object.id)
+            else:
+                text = 'Caramba...'
+                msg['Subject'] = 'Something goes wrong'
+
+            msg['To'] = COMMASPACE.join(SEND_TO['send_to'])
+            msg.attach(MIMEText(text.encode('UTF-8')+'\n\n'+
+                       'http://sokolskiy.masq.lc'+reverse('ams:detail', args=(post_id,))))
+
+            smtp = smtplib.SMTP(SMTP_IP['smtp_ip'][0], int(SMTP_PORT['smtp_port'][0]))
+            smtp.sendmail(SEND_FROM['send_from'][0], SEND_TO['send_to'], msg.as_string())
+        # In python 3.3 it now has ConnectionRefusedError and socket.error is deprecated.
+        except socket_error as serr:
+            if serr.errno != errno.ECONNREFUSED:
+                raise serr
+            else:
+                pass
+        except IndexError:
+            pass
+
+comment_was_posted.connect(send_mail, dispatch_uid='CommentPostDispatch')
