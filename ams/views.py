@@ -72,7 +72,7 @@ def detail_engineer(request, id):
     Showing engineer details
     """
     engineer = Engineer.objects.filter(id=id)
-    phone = Phone.objects.filter(engineer=engineer)
+    phone = Phone.objects.filter(ams_engineer_related=engineer)
     return TemplateResponse(request, 'ams/detail_engineer_ams.html', locals())
 
 
